@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Check, MapPin, Home, Calendar, Clock, Phone, CreditCard, User, Sparkles, Image as ImageIcon, RefreshCw } from 'lucide-react';
 
 // --- CONSTANTES ---
@@ -68,8 +68,8 @@ const LogoLG = () => (
 );
 
 const App = () => {
-  // Ajuste para TypeScript usando <any[]>
-  const [selectedServices, setSelectedServices] = useState([]);
+  // Ajustes estrictos de TypeScript añadidos: <any[]>, :any
+  const [selectedServices, setSelectedServices] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     date: '',
@@ -106,17 +106,17 @@ const App = () => {
   }, []);
 
   // --- CÁLCULOS ---
-  const subtotalEur = selectedServices.reduce((sum, service) => sum + service.priceEur, 0);
+  const subtotalEur = selectedServices.reduce((sum: number, service: any) => sum + service.priceEur, 0);
   const hasDiscount = selectedServices.length >= 2;
   const discountAmountEur = hasDiscount ? (subtotalEur * DISCOUNT_PERCENTAGE) : 0;
   const domicilioFeeEur = formData.modality === 'domicilio' ? DOMICILIO_FEE_EUR : 0;
   const totalEur = subtotalEur - discountAmountEur + domicilioFeeEur;
 
-  const eurToBs = (amountEur) => (amountEur * euroRate).toFixed(2);
+  const eurToBs = (amountEur: any) => (amountEur * euroRate).toFixed(2);
 
-  // --- MANEJO DE ESTADO --- Ajustes para TypeScript (any)
-  const toggleService = (service) => {
-    setSelectedServices(prev => {
+  // --- MANEJO DE ESTADO ---
+  const toggleService = (service: any) => {
+    setSelectedServices((prev: any[]) => {
       const exists = prev.find(s => s.id === service.id);
       if (exists) {
         return prev.filter(s => s.id !== service.id);
@@ -125,7 +125,7 @@ const App = () => {
     });
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
